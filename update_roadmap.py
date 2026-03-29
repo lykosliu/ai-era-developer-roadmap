@@ -4,7 +4,6 @@ import re
 
 # Configuration
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(ROOT_DIR, "docs/roadmap_data.json")
 ROADMAP_HTML = os.path.join(ROOT_DIR, "docs/index.html")
 HOST = "https://github.com/lykosliu/ai-era-developer-roadmap/blob/main"
 IGNORE_DIRS = {".git", ".venv", "node_modules", "contributions", "demos", "docs"}
@@ -137,13 +136,6 @@ def main():
     print("Scanning project for roadmap nodes...")
     tree = build_tree()
     
-    # Minify JSON for both file and HTML embedding
-    minified_json = json.dumps(tree, separators=(',', ':'))
-    
-    print(f"Updating {DATA_FILE} (minified)...")
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        f.write(minified_json)
-        
     print(f"Updating embedded data in {ROADMAP_HTML} (minified)...")
     update_html(tree)
     

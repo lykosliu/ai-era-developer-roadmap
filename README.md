@@ -14,7 +14,7 @@ The project is structured into domains that reflect the new reality of software 
 
 ## 🚀 Getting Started
 
-1. **Explore the Map:** Open [index.html](./docs/index.html) in your browser for an interactive visualization of the knowledge forest.
+1. **Explore the Map:** Open [index.html](https://lykosliu.github.io/ai-era-developer-roadmap/) in your browser for an interactive visualization of the knowledge forest.
 2. **Deep Dive:** Click on any node in the map or navigate the directories in this repository.
 3. **Run Examples:** Look for `demos/` directories within complex knowledge points to see technology in action.
 ---
