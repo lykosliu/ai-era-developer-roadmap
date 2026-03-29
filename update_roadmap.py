@@ -6,7 +6,7 @@ import re
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(ROOT_DIR, "docs/roadmap_data.json")
 ROADMAP_HTML = os.path.join(ROOT_DIR, "docs/index.html")
-HOST = "https://lykosliu.github.io/ai-era-developer-roadmap"
+HOST = "https://github.com/lykosliu/ai-era-developer-roadmap/blob/main"
 IGNORE_DIRS = {".git", ".venv", "node_modules", "contributions", "demos", "docs"}
 
 def parse_front_matter(content):
