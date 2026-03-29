@@ -150,9 +150,9 @@ def main():
     print("Done!")
 
 def update_html(data):
-    """Updates the embedded roadmapData in ROADMAP.html."""
+    """Updates the embedded roadmapData in docs/index.html."""
     if not os.path.exists(ROADMAP_HTML):
-        print("ROADMAP.html not found.")
+        print(f"{ROADMAP_HTML} not found.")
         return
 
     with open(ROADMAP_HTML, 'r', encoding='utf-8') as f:
