@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Era-Developer-Roadmap</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --node-bg: #ffffff;
+            --node-stroke: #e2e8f0;
+            --link-stroke: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            padding: 1.5rem 2rem;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+        }
+
+        .toggle-btn:hover {
+            opacity: 0.9;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .control-btn {
+            width: 3rem;
+            height: 3rem;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: #f1f5f9;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            width: 250px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            ring: 2px solid var(--primary-color);
+        }
+
+        #roadmap-svg {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #roadmap-svg:active {
+            cursor: grabbing;
+        }
+
+        .node circle {
+            fill: var(--node-bg);
+            stroke: var(--primary-color);
+            stroke-width: 2px;
+            transition: all 0.2s;
+        }
+
+        .node text {
+            font-size: 14px;
+            pointer-events: all; /* Make text clickable */
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .node-clickable {
+            cursor: default;
+        }
+
+        .node-leaf.node-clickable circle {
+            cursor: pointer;
+        }
+
+        .node-internal circle {
+            cursor: pointer;
+        }
+
+        .node-clickable:hover circle {
+            fill: var(--primary-color);
+            stroke: white;
+            r: 10px;
+        }
+
+        .node-clickable:hover text {
+            fill: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .node-internal circle {
+            fill: #fff;
+            stroke: var(--primary-color);
+            stroke-width: 3px;
+        }
+
+        .node-internal.collapsed circle {
+            fill: var(--primary-color);
+        }
+
+        .highlight-text {
+            fill: #f59e0b; /* Orange-ish highlight color */
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .link {
+            fill: none;
+            stroke: var(--link-stroke);
+            stroke-opacity: 0.4;
+            stroke-width: 1.5px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 250px;
+            font-size: 0.875rem;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI-Era-Developer-Roadmap</h1>
+        <div class="search-container">
+            <button class="toggle-btn" id="layout-toggle">Switch to Vertical</button>
+            <input type="text" id="search-input" placeholder="Search knowledge nodes...">
+        </div>
+    </header>
+
+    <div id="tooltip" class="tooltip"></div>
+    <div class="controls">
+        <button class="control-btn" id="zoom-in" title="Zoom In">+</button>
+        <button class="control-btn" id="zoom-out" title="Zoom Out">−</button>
+        <button class="control-btn" id="zoom-reset" title="Fit to Screen">⛶</button>
+    </div>
+    <div id="error-message" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); text-align:center; color:#ef4444; background:white; padding:2rem; border-radius:1rem; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); border:1px solid #fee2e2;">
+        <h2>Oops! D3.js could not be loaded.</h2>
+        <p>Please check your internet connection to load the visualization library.</p>
+    </div>
+    <svg id="roadmap-svg"></svg>
+
+    <script>
+        if (typeof d3 === 'undefined') {
+            document.getElementById('error-message').style.display = 'block';
+        }
+
+        const roadmapData = {"n":"AI-Era-Developer-Roadmap","h":"https://github.com/lykosliu","c":[{"n":"ai application patterns","c":[{"n":"Prompt Engineering","d":"Techniques for crafting effective inputs for LLMs.","l":"ai_application_patterns/Prompt_Engineering.md"},{"n":"rag","d":"Retrieval-Augmented Generation pattern.","l":"ai_application_patterns/rag/overview.md"}],"d":"Techniques and patterns for building LLM-powered applications.","l":"ai_application_patterns/README.md"},{"n":"ai era concepts","c":[{"n":"LLM Basics","d":"Understanding the foundation of Large Language Models.","l":"ai_era_concepts/LLM_Basics.md"},{"n":"Hallucination and Grounding","d":"Managing reliability and factual accuracy.","l":"ai_era_concepts/Hallucination_and_Grounding.md"},{"n":"Embeddings","d":"How AI understands meaning through vector space.","l":"ai_era_concepts/Embeddings.md"},{"n":"Tokens and Context","d":"Understanding the currency and memory of LLMs.","l":"ai_era_concepts/Tokens_and_Context.md"}],"d":"Introduction to fundamental concepts in the era of AI.","l":"ai_era_concepts/README.md"},{"n":"system fundamentals","c":[{"n":"Networking AI","d":"Distributed AI networking and protocols.","l":"system_fundamentals/Networking_AI.md"},{"n":"containers","d":"Containerization concepts and tools for AI.","l":"system_fundamentals/containers/overview.md"}],"d":"Core computing concepts optimized for the AI era.","l":"system_fundamentals/README.md"},{"n":"ai agent frameworks","c":[{"n":"langchain","d":"LLM orchestration framework.","l":"ai_agent_frameworks/langchain/overview.md"}],"d":"Frameworks for building autonomous AI agents.","l":"ai_agent_frameworks/README.md"},{"n":"data foundations","c":[{"n":"vector databases","d":"Vector storage and semantic retrieval systems.","l":"data_foundations/vector_databases/overview.md"}],"d":"Data storage and retrieval strategies for AI systems.","l":"data_foundations/README.md"},{"n":"devops ai era","c":[{"n":"CICD LLM","d":"CI/CD workflows for LLM applications.","l":"devops_ai_era/CICD_LLM.md"}],"d":"CI/CD and operational practices for AI model deployment.","l":"devops_ai_era/README.md"}]};
+
+        const width = window.innerWidth;
+        const height = window.innerHeight - 80;
+        const svg = d3.select("#roadmap-svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const g = svg.append("g");
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 3])
+            .on("zoom", (event) => g.attr("transform", event.transform));
+        svg.call(zoom);
+
+        let isVertical = false;
+        let currentQuery = "";
+        let isFiltered = false;
+        const tree = d3.tree().nodeSize([40, 200]);
+        let root;
+        const originalData = JSON.parse(JSON.stringify(roadmapData));
+
+        function fitView() {
+            const bounds = g.node().getBBox();
+            const parent = svg.node();
+            const fullWidth = parent.clientWidth;
+            const fullHeight = parent.clientHeight;
+            const width = bounds.width;
+            const height = bounds.height;
+            const midX = bounds.x + width / 2;
+            const midY = bounds.y + height / 2;
+
+            if (width === 0 || height === 0) return;
+
+            let scale = 0.85 / Math.max(width / fullWidth, height / fullHeight);
+            if (scale > 1.2) scale = 1.2; // Avoid extreme zoom-in for single nodes
+            
+            const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+
+            svg.transition().duration(750).call(
+                zoom.transform,
+                d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+            );
+        }
+
+        function renderText(selection) {
+            selection.each(function(d) {
+                const textNode = d3.select(this);
+                const name = d.data.n;
+                
+                if (!currentQuery) {
+                    textNode.text(name);
+                    return;
+                }
+
+                // Match whole string ignoring spaces in query but keeping structure in name
+                const cleanQuery = currentQuery.trim();
+                if (!cleanQuery) {
+                    textNode.text(name);
+                    return;
+                }
+
+                // We want to highlight the full matching string.
+                // Since the user wants to ignore spaces during search, 
+                // but highlight the full match in the text.
+                
+                // Escape special regex characters
+                const escapedQuery = cleanQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                // Allow spaces between characters in the regex to match names like "Prompt Engineering" with query "Prompt Engineering"
+                const regexParts = escapedQuery.split(/\s+/).filter(p => p.length > 0);
+                
+                if (regexParts.length === 0) {
+                    textNode.text(name);
+                    return;
+                }
+
+                // Create a regex that matches the sequence of parts with potential spaces between them
+                const pattern = regexParts.join('\\s*');
+                const regex = new RegExp(`(${pattern})`, 'gi');
+                const parts = name.split(regex);
+                
+                textNode.text(''); // Clear existing
+                parts.forEach(part => {
+                    if (regex.test(part)) {
+                        textNode.append('tspan')
+                            .attr('class', 'highlight-text')
+                            .text(part);
+                    } else {
+                        textNode.append('tspan')
+                            .text(part);
+                    }
+                });
+            });
+        }
+
+        function update(source) {
+            const nodes = root.descendants();
+            const links = root.links();
+
+            tree(root);
+
+            const link = g.selectAll(".link")
+                .data(links, d => d.target.data.n);
+
+            const linkEnter = link.enter().append("path")
+                .attr("class", "link");
+
+            const linkUpdate = link.merge(linkEnter).transition().duration(400);
+
+            if (isVertical) {
+                linkUpdate.attr("d", d3.linkVertical().x(d => d.x).y(d => d.y));
+            } else {
+                linkUpdate.attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+            }
+
+            link.exit().remove();
+
+            const node = g.selectAll(".node")
+                .data(nodes, d => d.data.n);
+
+            const nodeEnter = node.enter().append("g")
+                .attr("class", d => {
+                    let cls = `node ${d.children || d._children ? 'node-internal' : 'node-leaf'}`;
+                    if (d.data.l) cls += ' node-clickable';
+                    return cls;
+                })
+                .attr("transform", d => isVertical ? `translate(${source.x0 || 0},${source.y0 || 0})` : `translate(${source.y0 || 0},${source.x0 || 0})`);
+
+            // 1. Separate click logic for circle (expand/collapse)
+            nodeEnter.append("circle")
+                .attr("r", 6)
+                .on("click", (event, d) => {
+                    event.stopPropagation();
+                    if (d.children || d._children) {
+                        if (d.children) {
+                            d._children = d.children;
+                            d.children = null;
+                        } else {
+                            d.children = d._children;
+                            d._children = null;
+                        }
+                        d3.select(event.currentTarget.parentNode).classed("collapsed", !d.children);
+                        update(d);
+                    } else if (d.data.l) {
+                        // Leaf circle also jumps if no children
+                        const host = roadmapData.h || "";
+                        const link = d.data.l.startsWith('http') ? d.data.l : `${host}/${d.data.l}`;
+                        window.open(link, "_blank");
+                    }
+                });
+
+            // 2. Click logic for text (always jumps to link if present)
+            nodeEnter.append("text")
+                .attr("dy", "0.31em")
+                .on("click", (event, d) => {
+                    event.stopPropagation();
+                    if (d.data.l) {
+                        const host = roadmapData.h || "";
+                        const link = d.data.l.startsWith('http') ? d.data.l : `${host}/${d.data.l}`;
+                        window.open(link, "_blank");
+                    } else if (d.children || d._children) {
+                        // Text click on parent also toggles if no link
+                        if (d.children) {
+                            d._children = d.children;
+                            d.children = null;
+                        } else {
+                            d.children = d._children;
+                            d._children = null;
+                        }
+                        d3.select(event.currentTarget.parentNode).classed("collapsed", !d.children);
+                        update(d);
+                    }
+                });
+
+            // 3. Tooltip logic for the whole node
+            nodeEnter
+                .on("mouseover", (event, d) => {
+                    if (d.data.d) {
+                        const tooltip = d3.select("#tooltip");
+                        tooltip.style("opacity", 1)
+                            .html(`<strong>${d.data.n}</strong><br>${d.data.d}`)
+                            .style("left", (event.pageX + 10) + "px")
+                            .style("top", (event.pageY - 10) + "px");
+                    }
+                })
+                .on("mousemove", (event) => {
+                    d3.select("#tooltip")
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 10) + "px");
+                })
+                .on("mouseout", () => d3.select("#tooltip").style("opacity", 0));
+
+            const nodeUpdate = node.merge(nodeEnter).transition().duration(400)
+                .attr("transform", d => isVertical ? `translate(${d.x},${d.y})` : `translate(${d.y},${d.x})`);
+
+            nodeUpdate.select("text")
+                .attr("x", d => isVertical ? 0 : (d.children || d._children ? -12 : 12))
+                .attr("y", d => isVertical ? (d.children || d._children ? -20 : 20) : 0)
+                .attr("text-anchor", d => isVertical ? "middle" : (d.children || d._children ? "end" : "start"))
+                .call(renderText);
+
+            nodeUpdate.select("circle").attr("r", 6);
+            node.exit().remove();
+
+            nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+        }
+
+        root = d3.hierarchy(roadmapData, d => d.c);
+        root.x0 = 0;
+        root.y0 = 0;
+
+        function resetPosition() {
+            if (isVertical) {
+                tree.nodeSize([200, 100]);
+            } else {
+                tree.nodeSize([40, 200]);
+            }
+            update(root);
+            // Wait for transitions to finish or just use immediate bounding box
+            setTimeout(fitView, 500);
+        }
+
+        d3.select("#layout-toggle").on("click", function() {
+            isVertical = !isVertical;
+            this.textContent = isVertical ? "Switch to Horizontal" : "Switch to Vertical";
+            resetPosition();
+        });
+
+        // Zoom Controls
+        d3.select("#zoom-in").on("click", () => {
+            svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+        });
+
+        d3.select("#zoom-out").on("click", () => {
+            svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+        });
+
+        d3.select("#zoom-reset").on("click", fitView);
+
+        // Initial Position
+        resetPosition();
+
+        d3.select("#search-input").on("input", function() {
+            currentQuery = this.value.trim();
+            const cleanQuery = currentQuery.replace(/\s+/g, '').toLowerCase();
+            
+            // If we were in filtered mode, reset to full tree when user starts typing again
+            if (isFiltered) {
+                isFiltered = false;
+                root = d3.hierarchy(originalData, d => d.c);
+                resetPosition();
+            }
+
+            const nodes = g.selectAll(".node");
+            let firstMatch = null;
+
+            nodes.selectAll("circle")
+                .style("fill", d => {
+                    const cleanName = d.data.n.replace(/\s+/g, '').toLowerCase();
+                    const match = cleanQuery !== "" && cleanName.includes(cleanQuery);
+                    if (match && !firstMatch) firstMatch = d;
+                    return match ? "var(--primary-color)" : (d.children || d._children ? "" : "var(--node-bg)");
+                })
+                .attr("r", d => {
+                    const cleanName = d.data.n.replace(/\s+/g, '').toLowerCase();
+                    return cleanQuery !== "" && cleanName.includes(cleanQuery) ? 10 : 6;
+                });
+
+            // Update text highlighting
+            nodes.select("text").call(renderText);
+
+            // Center on the first match
+            if (firstMatch) {
+                const transform = d3.zoomTransform(svg.node());
+                const x = isVertical ? firstMatch.x : firstMatch.y;
+                const y = isVertical ? firstMatch.y : firstMatch.x;
+                
+                svg.transition().duration(300).call(
+                    zoom.transform,
+                    d3.zoomIdentity.translate(width / 2 - transform.k * x, height / 2 - transform.k * y).scale(transform.k)
+                );
+            } else if (currentQuery === "") {
+                fitView();
+            }
+        });
+
+        d3.select("#search-input").on("keydown", function(event) {
+            if (event.key === "Enter") {
+                currentQuery = this.value.trim();
+                const cleanQuery = currentQuery.replace(/\s+/g, '').toLowerCase();
+                
+                if (cleanQuery === "") {
+                    isFiltered = false;
+                    root = d3.hierarchy(originalData, d => d.c);
+                    resetPosition();
+                    return;
+                }
+
+                isFiltered = true;
+                // Deep copy original data to filter
+                const filteredData = JSON.parse(JSON.stringify(originalData));
+                
+                function filter(node) {
+                    const cleanName = node.n.replace(/\s+/g, '').toLowerCase();
+                    if (cleanName.includes(cleanQuery)) return true;
+                    if (node.c) {
+                        node.c = node.c.filter(child => filter(child));
+                        return node.c.length > 0;
+                    }
+                    return false;
+                }
+
+                filter(filteredData);
+                root = d3.hierarchy(filteredData, d => d.c);
+                resetPosition();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            svg.attr("width", window.innerWidth).attr("height", window.innerHeight - 80);
+        });
+    </script>
+</body>
+</html>
