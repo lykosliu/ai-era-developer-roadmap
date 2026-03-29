@@ -4,10 +4,10 @@ import re
 
 # Configuration
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(ROOT_DIR, "roadmap_data.json")
-ROADMAP_HTML = os.path.join(ROOT_DIR, "ROADMAP.html")
-HOST = "https://github.com/lykosliu"
-IGNORE_DIRS = {".git", ".venv", "node_modules", "contributions", "demos"}
+DATA_FILE = os.path.join(ROOT_DIR, "docs/roadmap_data.json")
+ROADMAP_HTML = os.path.join(ROOT_DIR, "docs/index.html")
+HOST = "https://lykosliu.github.io/ai-era-developer-roadmap"
+IGNORE_DIRS = {".git", ".venv", "node_modules", "contributions", "demos", "docs"}
 
 def parse_front_matter(content):
     """Parses Jekyll-style front matter from markdown content."""
