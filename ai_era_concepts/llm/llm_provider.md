@@ -1,5 +1,5 @@
 ---
-name: LLM Provider
+name: llm provider
 description: Exploring the landscape of Large Language Model providers and their standard protocols.
 ---
 
@@ -317,7 +317,7 @@ The following table provides a comparison of major LLM providers, their protocol
 | **Ollama** | OpenAI Compatible (Local) | `http://localhost:11434/v1` | [Ollama Docs](https://ollama.com/blog/openai-compatibility) |
 | **302.ai** | OpenAI Compatible (Aggregator) | `https://api.302.ai/v1` | [302.ai Docs](https://302.ai/) |
 | **OpenRouter** | OpenAI Compatible (Aggregator) | `https://openrouter.ai/api/v1` | [OpenRouter Docs](https://openrouter.ai/docs) |
-| **LinkAPI** | OpenAI Compatible (Aggregator) | `https://api.linkapi.ai/v1` | [LinkAPI Docs](https://api.linkapi.ai/docs) |
+| **LinkAPI** | OpenAI Compatible (Aggregator) | `https://api.linkapi.ai/v1` | [LinkAPI Docs](https://docs.linkapi.ai/) |
 
 ## AI Context
 Modern AI development often adopts a **Multi-Model Strategy**. By standardizing on the OpenAI compatible protocol, developers can use LLM Aggregators (like OpenRouter or 302.ai) to dynamically switch between models based on performance, cost, or availability. Additionally, local runners like Ollama provide a seamless path for private, offline development using the same API structures as enterprise cloud providers.

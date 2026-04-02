@@ -36,7 +36,7 @@ def should_include(file_path, fm):
     if name_in_fm:
         # Check if filename matches name (allowing for space/underscore differences)
         clean_name = name_in_fm.replace(' ', '_')
-        if filename == f"{clean_name}.md":
+        if filename.lower() == f"{clean_name}.md".lower():
             return True
         
     return False
