@@ -1,9 +1,9 @@
 ---
-name: LLM Basics
+name: llm
 description: Understanding the foundation of Large Language Models.
 ---
 
-# LLM Basics: The Foundation
+# LLM: The Foundation
 
 ## Overview
 Large Language Models (LLMs) are deep learning models trained on vast amounts of text data to understand, generate, and reason with human language.

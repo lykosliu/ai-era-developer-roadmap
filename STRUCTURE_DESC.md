@@ -80,7 +80,7 @@ Use this for directories that serve as a collection of multiple topics or sub-ca
 
 ## �️ Roadmap Integration
 
-The interactive roadmap ([index.html](./docs/index.html)) is automatically synchronized with the project structure:
+The interactive roadmap ([ROADMAP.html](./ROADMAP.html)) is automatically synchronized with the project structure:
 - **Metadata Source:** The `name` and `description` fields in the Front Matter are used as the display title and tooltip on the roadmap.
 - **Directory Nodes:** For directories, the roadmap logic prioritizes `README.md` or `overview.md` to extract the category's metadata.
 - **Auto-Sync:** Run `bash sync.sh` after adding new content to update the roadmap data.

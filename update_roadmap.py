@@ -151,10 +151,10 @@ def update_html(data):
         content = f.read()
 
     # Regex to find roadmapData object (handles both single line and multi-line)
-    pattern = r'(const roadmapData = ).*?([ \t\n]*;)'
+    pattern = r'(const roadmapData = ).*?([ \t\n]*;[ \t\n]*const width)'
     # Minify JSON for embedding
     minified_json = json.dumps(data, separators=(',', ':'))
-    replacement = f'\\1{minified_json};'
+    replacement = f'\\1{minified_json};\\n        const width'
     
     new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
     

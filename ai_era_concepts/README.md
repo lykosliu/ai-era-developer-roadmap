@@ -9,7 +9,7 @@ Welcome to the AI Era Concepts section! This directory serves as a collection of
 
 ## Topics Covered
 
-- [LLM Basics](./LLM_Basics.md): What are Large Language Models and how do they work?
+- [LLM Basics](./llm/README.md): What are Large Language Models and how do they work?
 - [Tokens and Context Window](./Tokens_and_Context.md): Understanding the currency and memory of LLMs.
 - [Embeddings and Latent Space](./Embeddings.md): How AI understands meaning through numbers.
 - [Hallucination and Grounding](./Hallucination_and_Grounding.md): Managing reliability and factual accuracy.
