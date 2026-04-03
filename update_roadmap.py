@@ -28,9 +28,14 @@ def should_include(file_path, fm):
         return False
     
     filename = os.path.basename(file_path)
+    parent_dir = os.path.basename(os.path.dirname(file_path))
     name_in_fm = fm.get('name')
     
     if filename == "overview.md" or filename == "README.md":
+        return True
+    
+    # Files in 'demos' directory are allowed to have any name in Front Matter
+    if parent_dir == "demos":
         return True
     
     if name_in_fm:

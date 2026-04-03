@@ -47,7 +47,15 @@ Use this for tools, frameworks, or multi-faceted technologies that require runna
       ```
     - Explains the technology, its value proposition, and how it fits into the AI ecosystem.
   - `demos/` directory:
-    - `README.md`: Explaining the demos and how to run them.
+    - `README.md`:
+      - **Required Header (Front Matter):**
+        ```markdown
+        ---
+        name: Demos
+        description: Hands-on examples and runnable code.
+        ---
+        ```
+      - Explaining the demos and how to run them.
     - `setup.sh`: Script to install dependencies (if any).
     - `demo_*.py` (or other languages): Runnable code samples demonstrating the core value.
 

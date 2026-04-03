@@ -1,3 +1,8 @@
+---
+name: vector database demos
+description: Hands-on examples and runnable code for vector databases.
+---
+
 # Vector Database Demos
 
 This directory contains simple, runnable examples of how to use a vector database for semantic search.
