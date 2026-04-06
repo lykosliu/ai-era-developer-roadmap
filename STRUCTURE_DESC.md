@@ -28,6 +28,7 @@ Use this for focused concepts that can be explained within a single document wit
   - **Why it matters:** Its role and value in the AI era.
   - **Key Principles:** The underlying logic or background.
   - **AI Context:** How this topic relates to AI systems or development.
+  - **References (Optional):** Links to official documentation, whitepapers, or further reading.
 
 ---
 
@@ -46,6 +47,7 @@ Use this for tools, frameworks, or multi-faceted technologies that require runna
       ---
       ```
     - Explains the technology, its value proposition, and how it fits into the AI ecosystem.
+    - **References (Optional):** Links to official documentation, whitepapers, or further reading.
   - `demos/` directory:
     - `README.md`:
       - **Required Header (Front Matter):**
@@ -76,6 +78,7 @@ Use this for directories that serve as a collection of multiple topics or sub-ca
       ---
       ```
     - Provides a high-level overview of the category and lists/links the included sub-topics.
+    - **References (Optional):** Links to official documentation, whitepapers, or further reading.
 
 ---
 
