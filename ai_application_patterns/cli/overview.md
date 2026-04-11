@@ -1,6 +1,6 @@
 ---
-name: Command-Line Interface (CLI)
-description: A text-based interface used to interact with software and operating systems by typing commands into a terminal.
+name: CLI
+description:  Command-Line Interface (CLI). A text-based interface used to interact with software and operating systems by typing commands into a terminal.
 ---
 
 # Command-Line Interface (CLI)
