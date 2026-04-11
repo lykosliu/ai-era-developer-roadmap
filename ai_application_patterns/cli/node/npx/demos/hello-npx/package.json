@@ -1,0 +1,11 @@
+{
+  "name": "hello-npx-demo",
+  "version": "1.0.0",
+  "description": "A simple demo of an npx-executable package",
+  "main": "index.js",
+  "bin": {
+    "hello-npx": "./index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
