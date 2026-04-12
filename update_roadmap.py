@@ -10,7 +10,10 @@ IGNORE_DIRS = {".git", ".venv", "node_modules", "contributions", "demos", "docs"
 
 def parse_front_matter(content):
     """Parses Jekyll-style front matter from markdown content."""
-    match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+    # Accept both styles:
+    # 1) closing '---' followed by newline
+    # 2) closing '---' at end-of-file (no trailing newline)
+    match = re.match(r'^---[ \t]*\n(.*?)\n---(?:[ \t]*\n|$)', content, re.DOTALL)
     if not match:
         return None
     
