@@ -13,3 +13,15 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Ignore hidden files and directories
+.*
+**/.*
+
+# Keep repository-level config files/directories tracked
+!.gitignore
+!.github/
+!.github/**
+
+# Ignore logs directory under any demos folder
+**/demos/logs/
