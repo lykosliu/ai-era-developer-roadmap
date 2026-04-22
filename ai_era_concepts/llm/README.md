@@ -22,3 +22,7 @@ LLMs have shifted software development from "deterministic logic" to "probabilis
 
 ## AI Context
 LLMs are the "engine" behind AI agents, chatbots, and copilot tools. Understanding their limits (e.g., training cut-off, reasoning vs. retrieval) is crucial for building robust systems.
+
+## Included Topics
+
+- `local_deploy_model/`: Practical analysis of local model deployment frameworks (vLLM, Ollama, and Sentence Transformers ecosystem).
