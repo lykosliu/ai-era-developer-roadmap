@@ -1,0 +1,7 @@
+# Demo Report
+dataset=demo
+status=prepared
+model=tiny-baseline
+trained_on=2026-04-26 09:06:36
+accuracy=0.92
+latency_ms=35
