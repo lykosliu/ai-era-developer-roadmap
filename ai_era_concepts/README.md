@@ -13,3 +13,4 @@ Welcome to the AI Era Concepts section! This directory serves as a collection of
 - [Tokens and Context Window](./Tokens_and_Context.md): Understanding the currency and memory of LLMs.
 - [Embeddings and Latent Space](./Embeddings.md): How AI understands meaning through numbers.
 - [Hallucination and Grounding](./Hallucination_and_Grounding.md): Managing reliability and factual accuracy.
+- [Prompt Engineering](./prompt_engineering/overview.md): Designing prompts for reliable, safe, and scalable LLM outputs.
